@@ -2,7 +2,7 @@ import clientPromise from "./mongodb";
 import { ObjectId } from "mongodb";
 import { CustomerType, Order } from "../types/customer";
 import { NextResponse } from "next/server";
-import { OrderRow, OrdersComponentProps } from "../components/OrdersComponent";
+import { OrderRow } from "../components/OrdersComponent";
 
 export const addCustomer = async (
   customer: Omit<CustomerType, "_id">
