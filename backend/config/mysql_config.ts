@@ -19,7 +19,7 @@ const sequelize = new Sequelize("cms_db", "oskari", "password", {
 //Table sync
 async function syncModels() {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
     console.log("All models were synchronized successfully.");
   } catch (error) {
     console.error("Error syncing models:", error);

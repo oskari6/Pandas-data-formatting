@@ -26,7 +26,7 @@ export const Header = () => {
           </Link>
         </li>
         <li className="p-5">
-          <Link className="w-full" href="/">
+          <Link className="w-full" href="/buy">
             Buy
           </Link>
         </li>

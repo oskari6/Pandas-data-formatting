@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { Header } from "./components/Header";
-import { Options } from "next/dist/server/base-server";
-import Preview from "./components/Preview";
+import Preview from "./src/components/Preview";
 
 const mapContainerStyle = {
   width: "100%",
@@ -40,7 +38,6 @@ export default function Home() {
   };
   return (
     <div className="">
-      <Header />
       <div className="gap-4 flex justify-center sticky top-0 w-full bg-white z-50 py-2">
         <input
           className="border rounded-lg text-[20px] p-1"
@@ -56,21 +53,6 @@ export default function Home() {
       <div className="ml-5 mt-5">
         <h4>Real Estate & Homes For Sale</h4>
         <span className="text-gray-600">100000 results</span>
-      </div>
-      <div className="p-3 flex-wrap flex gap-2">
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
-        <Preview />
       </div>
       <OptionButtons toggle={toggleMap} />
       {mapView && (

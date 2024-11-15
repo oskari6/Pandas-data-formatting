@@ -1,37 +1,38 @@
 import Image from "next/image";
+import House from "../interfaces/House";
 
-const Preview = () => {
+const Preview = ({ house }: { house: House }) => {
   return (
     <div className="relative w-[300px] h-[290px] flex flex-col shadow-xl rounded-xl">
       <div className="w-full h-[180px] relative rounded-t-xl overflow-hidden">
         <Image
-          src="/template.jpg" // Path to your image
-          alt="logo"
+          src={house.photos[0]?.photo_url} // Path to your image
+          alt={house.address}
           layout="fill"
           objectFit="cover"
         />
       </div>
       <div>
-        <h4>$100,000</h4>
+        <h4>${house.price}</h4>
         <div className="flex text-[14px]">
           <div className="h-[25px] p-1 border-r-2 border-gray-300">
-            <b>4</b>
+            <b>{house.bed}</b>
             <abbr>bds</abbr>
           </div>
           <div className=" h-[25px] p-1 border-r-2 border-gray-300">
-            <b>3</b>
+            <b>{house.bath}</b>
             <abbr>ba</abbr>
           </div>
           <div className=" h-[25px] p-1">
-            <b>1000</b>
-            <abbr>sqft</abbr> - House for sale
+            <b>{house.house_size > BigInt(0) && house.house_size}</b>
+            {house.house_size > BigInt(0) && <abbr>sqft</abbr>} - House for sale
           </div>
         </div>
       </div>
-      <span className="text-[14px]">[address]</span>
-      <span className="text-[10px]">[FIRM]</span>
+      <span className="text-[14px]">{house.address}</span>
+      <span className="text-[10px]">{house.brokered_by || null}</span>
       <span className="text-white absolute top-2 left-2 p-1 bg-black/50 rounded-xl text-[12px] font-bold">
-        [attribute]
+        {house.property_type || null}
       </span>
       <div className="absolute top-2 right-2">
         <button>

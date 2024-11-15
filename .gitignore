@@ -1,0 +1,51 @@
+# Node modules
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Static files and cache
+.DS_Store
+*.log
+yarn-debug.log*
+yarn-error.log*
+npm-debug.log*
+*.swp
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Next.js cache
+.next/cache
+
+# Ignore local configuration files
+.vscode/
+.idea/
+
+# Ignore generated types (if using TypeScript with Next.js)
+*.d.ts
+
+# Ignore Mac system files
+.DS_Store
+
+# Ignore build output for Docker (optional)
+docker-compose.override.yml
+
+# Ignore Sentry (if using Sentry for error tracking)
+.sentryclirc
+
+# Ignore Netlify build cache (if deploying on Netlify)
+.netlify
+
+# Ignore Firebase functions build cache (if using Firebase)
+firebase-debug.log
+firestore-debug.log
+
+#folders
+/datasets/real_estate_images/
+/backend/public/
