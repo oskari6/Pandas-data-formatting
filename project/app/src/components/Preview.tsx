@@ -2,6 +2,15 @@ import Image from "next/image";
 import House from "../interfaces/House";
 
 const Preview = ({ house }: { house: House }) => {
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const price = formatCurrency(house.price);
   return (
     <div className="relative w-[300px] h-[290px] flex flex-col shadow-xl rounded-xl">
       <div className="w-full h-[180px] relative rounded-t-xl overflow-hidden">
@@ -13,7 +22,7 @@ const Preview = ({ house }: { house: House }) => {
         />
       </div>
       <div>
-        <h4>${house.price}</h4>
+        <h4>{price}</h4>
         <div className="flex text-[14px]">
           <div className="h-[25px] p-1 border-r-2 border-gray-300">
             <b>{house.bed}</b>
@@ -30,7 +39,7 @@ const Preview = ({ house }: { house: House }) => {
         </div>
       </div>
       <span className="text-[14px]">{house.address}</span>
-      <span className="text-[10px]">{house.brokered_by || null}</span>
+      <span className="text-[10px]">{null}</span>
       <span className="text-white absolute top-2 left-2 p-1 bg-black/50 rounded-xl text-[12px] font-bold">
         {house.property_type || null}
       </span>

@@ -1,0 +1,21 @@
+feature_id,feature,value,description
+1,Square Footage,1500 sqft,Total area of the house
+2,Number of Bedrooms,3,Number of sleeping rooms
+3,Number of Bathrooms,2,Number of bathrooms
+4,Garage,2-car,Garage capacity
+5,Swimming Pool,Yes,Availability of a swimming pool
+6,Central Heating,Yes,Heating system
+7,Air Conditioning,Yes,Cooling system
+8,Balcony,Yes,Outdoor balcony
+9,Garden,Yes,Garden area
+10,Basement,Yes,Finished basement
+11,Solar Panels,Installed,Installed solar panels
+12,Fireplace,Yes,Built-in fireplace
+13,Walk-in Closet,Yes,Walk-in closet space
+14,Furnished,Fully Furnished,Comes with furniture
+15,Hardwood Floors,Yes,Hardwood flooring
+16,Open Floor Plan,Yes,Spacious and open layout
+17,Smart Home Features,Yes,Smart automation features
+18,Energy-Efficient Windows,Double-Pane,Windows with better insulation
+19,Home Office,Yes,Dedicated office space
+20,Laundry Room,Yes,Laundry and drying area

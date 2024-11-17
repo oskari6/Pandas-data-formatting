@@ -42,7 +42,7 @@ function Houses() {
 
   return (
     <div>
-      <span className="text-gray-600 ml-5">{42 * totalPages} results</span>
+      <span className="text-gray-600 ml-5">{totalPages} results</span>
       <ul className="p-3 flex-wrap flex gap-2">
         {houses.map((house: any) => (
           <li key={house.house_id}>

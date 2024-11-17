@@ -1,9 +1,11 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/mysql_config";
 import HousePhoto from "./HousePhoto";
+import HouseAmenity from "./HouseAmenity";
+import HouseFeature from "./HouseFeature";
+import HouseAgent from "./HouseAgent";
 
 class House extends Model {
-  public brokered_by!: string;
   public status!: string;
   public price!: number;
   public bed!: bigint;
@@ -13,7 +15,6 @@ class House extends Model {
   public prev_sold_date!: Date | null;
   public house_id!: bigint;
   public year_built!: bigint;
-  public property_type!: string;
   public created_at!: Date;
   public address!: string;
   public location_id!: bigint;
@@ -24,10 +25,6 @@ House.init(
     house_id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
-      allowNull: false,
-    },
-    brokered_by: {
-      type: DataTypes.TEXT,
       allowNull: false,
     },
     status: {
@@ -62,10 +59,6 @@ House.init(
       type: DataTypes.BIGINT,
       allowNull: false,
     },
-    property_type: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -88,5 +81,14 @@ House.init(
 
 House.hasMany(HousePhoto, { foreignKey: "house_id", as: "photos" });
 HousePhoto.belongsTo(House, { foreignKey: "house_id", as: "house" });
+House.belongsToMany(HouseAmenity, {
+  through: "HouseAmenityMap",
+  as: "amenities",
+});
+House.belongsToMany(HouseFeature, {
+  through: "HouseFeatureyMap",
+  as: "features",
+});
+House.belongsTo(HouseAgent, { as: "agent", foreignKey: "agent_id" });
 
 export default House;

@@ -1,0 +1,21 @@
+amenity_id,amenity,is_shared,description,extra_cost
+1,Gym,1,Fully equipped gym,0
+2,Tennis Court,1,Tennis playing area,0
+3,Playground,1,Children's play area,0
+4,Clubhouse,1,Social event venue,50
+5,Community Pool,1,Shared swimming pool,0
+6,BBQ Area,1,Outdoor BBQ setup,20
+7,Parking Lot,1,Designated parking,0
+8,Security,1,24/7 security presence,30
+9,Pet Park,1,Fenced park for pets,10
+10,Jogging Track,1,Track for jogging and walking,0
+11,24-Hour Concierge,1,Concierge service,100
+12,Electric Car Charging,1,Charging for electric vehicles,50
+13,Roof Deck,1,Outdoor deck on the roof,75
+14,Bicycle Storage,1,Storage area for bicycles,20
+15,Sauna,1,Sauna facility,80
+16,Library,1,Reading and study room,40
+17,Co-working Space,1,Space for remote work,60
+18,Game Room,1,Recreational game room,30
+19,Yoga Studio,1,Dedicated yoga studio,50
+20,Private Theater,1,Private cinema,120
