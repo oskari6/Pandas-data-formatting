@@ -4,9 +4,9 @@ import House from "./House";
 
 class HouseFeature extends Model {
   public feature_id!: number;
-  public feature!: string;
-  public value!: string;
-  public description!: string;
+  public feature?: string;
+  public value?: string;
+  public description?: string;
 }
 
 HouseFeature.init(
@@ -18,15 +18,15 @@ HouseFeature.init(
     },
     feature: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     value: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
@@ -35,7 +35,5 @@ HouseFeature.init(
     timestamps: false, // Disable Sequelize's automatic timestamp columns if unnecessary
   }
 );
-
-HouseFeature.belongsToMany(House, { through: "HouseFeatureMap", as: "houses" });
 
 export default HouseFeature;

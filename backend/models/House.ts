@@ -1,9 +1,10 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, INTEGER, Model } from "sequelize";
 import sequelize from "../config/mysql_config";
 import HousePhoto from "./HousePhoto";
 import HouseAmenity from "./HouseAmenity";
 import HouseFeature from "./HouseFeature";
 import HouseAgent from "./HouseAgent";
+import HouseLocation from "./HouseLocation";
 
 class House extends Model {
   public status!: string;
@@ -14,10 +15,11 @@ class House extends Model {
   public house_size!: bigint;
   public prev_sold_date!: Date | null;
   public house_id!: bigint;
-  public year_built!: bigint;
+  public year_built?: bigint;
   public created_at!: Date;
   public address!: string;
   public location_id!: bigint;
+  public agent_id?: bigint;
 }
 
 House.init(
@@ -26,6 +28,10 @@ House.init(
       type: DataTypes.BIGINT,
       primaryKey: true,
       allowNull: false,
+    },
+    agent_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     status: {
       type: DataTypes.TEXT,
@@ -75,20 +81,39 @@ House.init(
   {
     sequelize,
     tableName: "houses",
-    timestamps: false, // Disable Sequelize's automatic timestamp columns if unnecessary
+    timestamps: false,
   }
 );
 
 House.hasMany(HousePhoto, { foreignKey: "house_id", as: "photos" });
 HousePhoto.belongsTo(House, { foreignKey: "house_id", as: "house" });
 House.belongsToMany(HouseAmenity, {
-  through: "HouseAmenityMap",
+  through: "house_amenity_map",
+  foreignKey: "house_id",
   as: "amenities",
+  timestamps: false,
+});
+HouseAmenity.belongsToMany(House, {
+  through: "house_amenity_map",
+  foreignKey: "amenity_id",
+  as: "houses",
+  timestamps: false,
 });
 House.belongsToMany(HouseFeature, {
-  through: "HouseFeatureyMap",
+  through: "house_feature_map",
+  foreignKey: "house_id",
   as: "features",
+  timestamps: false,
 });
-House.belongsTo(HouseAgent, { as: "agent", foreignKey: "agent_id" });
+HouseFeature.belongsToMany(House, {
+  through: "house_feature_map",
+  foreignKey: "feature_id",
+  as: "houses",
+  timestamps: false,
+});
+
+House.belongsTo(HouseAgent, { foreignKey: "agent_id", as: "agents" });
+HouseAgent.hasMany(House, { foreignKey: "agent_id", as: "houses" });
+House.belongsTo(HouseLocation, { foreignKey: "location_id", as: "location" });
 
 export default House;

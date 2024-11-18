@@ -13,7 +13,7 @@ import { Sequelize } from "sequelize";
 const sequelize = new Sequelize("cms_db", "oskari", "password", {
   host: "localhost",
   dialect: "mysql",
-  //logging: false // for terminal logs disable
+  logging: false, // for terminal logs disable
 });
 
 //Table sync

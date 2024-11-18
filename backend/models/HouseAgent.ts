@@ -1,11 +1,10 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/mysql_config";
-import House from "./House";
 
 class HouseAgent extends Model {
   public agent_id!: number;
-  public name!: string;
-  public contact_info!: string;
+  public name?: string;
+  public contact_info?: string;
   public agency!: string;
 }
 
@@ -18,15 +17,15 @@ HouseAgent.init(
     },
     name: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     contact_info: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     agency: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
   },
   {
@@ -35,7 +34,5 @@ HouseAgent.init(
     timestamps: false, // Disable Sequelize's automatic timestamp columns if unnecessary
   }
 );
-
-HouseAgent.hasMany(House, { foreignKey: "agent_id", as: "photos" });
 
 export default HouseAgent;

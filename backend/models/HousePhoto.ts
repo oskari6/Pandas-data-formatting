@@ -25,7 +25,7 @@ HousePhoto.init(
     },
     house_id: {
       type: DataTypes.BIGINT,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: "houses", // Name of the table you want to reference
         key: "house_id", // Primary key in the houses table
