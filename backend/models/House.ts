@@ -20,6 +20,7 @@ class House extends Model {
   public address!: string;
   public location_id!: bigint;
   public agent_id?: bigint;
+  public property_type?: string;
 }
 
 House.init(
@@ -77,6 +78,10 @@ House.init(
       type: DataTypes.BIGINT,
       allowNull: false,
     },
+    property_type: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   },
   {
     sequelize,
@@ -112,7 +117,7 @@ HouseFeature.belongsToMany(House, {
   timestamps: false,
 });
 
-House.belongsTo(HouseAgent, { foreignKey: "agent_id", as: "agents" });
+House.belongsTo(HouseAgent, { foreignKey: "agent_id", as: "agent" });
 HouseAgent.hasMany(House, { foreignKey: "agent_id", as: "houses" });
 House.belongsTo(HouseLocation, { foreignKey: "location_id", as: "location" });
 

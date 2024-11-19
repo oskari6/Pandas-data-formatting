@@ -1,32 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import Preview from "./src/components/Preview";
+import { MapComponent } from "./src/api/MapComponent";
+import { MapProvider } from "./src/api/MapProvider";
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "88%",
-};
-
-const center = {
-  lat: 34.0549,
-  lng: -118.2426,
-};
-
-const MapComponent = () => {
-  return (
-    <LoadScript
-      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
-    >
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={center}
-        zoom={10}
-      ></GoogleMap>
-    </LoadScript>
-  );
-};
 type OptionButtonsProps = {
   toggle: () => void;
 };
@@ -37,7 +15,7 @@ export default function Home() {
     setMapView(!mapView);
   };
   return (
-    <div className="">
+    <div className="relative">
       <div className="gap-4 flex justify-center sticky top-0 w-full bg-white z-50 py-2">
         <input
           className="border rounded-lg text-[20px] p-1"
@@ -56,8 +34,10 @@ export default function Home() {
       </div>
       <OptionButtons toggle={toggleMap} />
       {mapView && (
-        <div className="z-[2]">
-          <MapComponent />
+        <div className="fixed inset-0 top-[20%] z-[2] w-full h-full">
+          <MapProvider>
+            <MapComponent />
+          </MapProvider>
         </div>
       )}
     </div>
@@ -66,7 +46,7 @@ export default function Home() {
 
 const OptionButtons = ({ toggle }: OptionButtonsProps) => {
   return (
-    <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2">
+    <div className="z-[3] fixed bottom-10 left-1/2 transform -translate-x-1/2">
       <div className="shadow-xl bg-gray-200 rounded-lg flex justify-center">
         <button onClick={() => toggle()} className="p-5">
           Map

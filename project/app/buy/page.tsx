@@ -3,14 +3,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import House from "../src/interfaces/House";
 import HousePhoto from "../src/interfaces/HousePhoto";
-import Preview from "../src/components/Preview";
+import Preview, { EmptyPreview } from "../src/components/Preview";
+import { MapComponent } from "../src/api/MapComponent";
+import { MapProvider } from "../src/api/MapProvider";
 
-function Houses() {
+const Houses = React.memo(() => {
   const [houses, setHouses] = useState<House[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const cachedPages = useRef<{ [key: number]: House[] }>({});
-
+  const [loading, setLoading] = useState(true);
+  const [totalHouses, setTotalHouses] = useState(null);
   useEffect(() => {
     const fetchHouses = async () => {
       if (cachedPages.current[page]) {
@@ -18,6 +21,7 @@ function Houses() {
         return;
       }
       try {
+        setLoading(true);
         const res = await fetch(
           `http://localhost:8000/api/houses?page=${page}&limit=42`,
           {
@@ -33,22 +37,31 @@ function Houses() {
         cachedPages.current[page] = result.data;
         setHouses(result.data);
         setTotalPages(result.totalPages);
+        setTotalHouses(result.total);
       } catch (error) {
         console.error("frontend error: ", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchHouses();
   }, [page]);
 
   return (
-    <div>
-      <span className="text-gray-600 ml-5">{totalPages} results</span>
+    <div className="select-none">
+      <span className="select-none text-gray-600 ml-5">
+        {totalHouses} results
+      </span>
       <ul className="p-3 flex-wrap flex gap-2">
-        {houses.map((house: any) => (
-          <li key={house.house_id}>
-            <Preview house={house} />
-          </li>
-        ))}
+        {houses.length > 0 ? (
+          houses.map((house) => (
+            <li key={house.house_id}>
+              <a>{house ? <Preview house={house} /> : <EmptyPreview />}</a>
+            </li>
+          ))
+        ) : (
+          <p>No houses</p>
+        )}
       </ul>
       <div className="flex justify-center items-center gap-3">
         <button
@@ -71,16 +84,90 @@ function Houses() {
       </div>
     </div>
   );
-}
+});
+
 const BuyPage = () => {
+  const [mapWidth, setMapWidth] = useState(400);
+  const minWidth = 200;
+  const maxWidth = window.innerWidth - 300;
+
+  const handleDrag = throttle((e: MouseEvent) => {
+    window.requestAnimationFrame(() => {
+      const newWidth = e.clientX;
+      if (newWidth > minWidth && newWidth < maxWidth) {
+        setMapWidth(newWidth);
+      }
+    });
+  }, 20);
+
+  const startDrag = () => {
+    document.addEventListener("mousemove", handleDrag);
+    document.addEventListener("mouseup", stopDrag);
+  };
+
+  const stopDrag = () => {
+    document.removeEventListener("mousemove", handleDrag);
+    document.removeEventListener("mouseup", stopDrag);
+  };
+
   return (
-    <div>
-      <div className="ml-5 mt-5">
-        <h4>Real Estate & Homes For Sale</h4>
+    <div className="h-[80%]">
+      <div className="gap-4 flex justify-center sticky top-0 w-full bg-white z-50 py-2">
+        <input
+          className="border rounded-lg text-[20px] p-1"
+          placeholder="Address"
+        />
+        <button className="border border-gray-400 p-2 rounded">For Sale</button>
+        <button className="border border-gray-400 p-2 rounded">Price</button>
+        <button className="border border-gray-400 p-2 rounded">More</button>
+        <button className="bg-blue-500 text-white p-2 rounded">
+          Save search
+        </button>
       </div>
-      <Houses />
+      <div className="flex h-full">
+        <div style={{ width: `${mapWidth}px` }} className="relative h-full">
+          <MapProvider>
+            <MapComponent />
+          </MapProvider>
+        </div>
+
+        <div
+          className="w-2 bg-gray-400 cursor-col-resize"
+          onMouseDown={startDrag}
+        ></div>
+
+        <div
+          style={{ width: `calc(100% - ${mapWidth}px)` }}
+          className="h-full overflow-y-auto"
+        >
+          <div className="ml-5 mt-5">
+            <h4 className="select-none">Real Estate & Homes For Sale</h4>
+          </div>
+          <Houses />
+        </div>
+      </div>
     </div>
   );
+};
+
+const throttle = (func: (...args: any[]) => void, limit: number) => {
+  let lastFunc: NodeJS.Timeout;
+  let lastRan: number;
+
+  return (...args: any[]) => {
+    if (!lastRan) {
+      func(...args);
+      lastRan = Date.now();
+    } else {
+      clearTimeout(lastFunc);
+      lastFunc = setTimeout(() => {
+        if (Date.now() - lastRan >= limit) {
+          func(...args);
+          lastRan = Date.now();
+        }
+      }, limit - (Date.now() - lastRan));
+    }
+  };
 };
 
 export default BuyPage;

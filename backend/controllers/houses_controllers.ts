@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import House from "../models/House";
 import HousePhoto from "../models/HousePhoto";
+import HouseAgent from "../models/HouseAgent";
+import HouseLocation from "../models/HouseLocation";
+import HouseFeature from "../models/HouseFeature";
+import HouseAmenity from "../models/HouseAmenity";
 
 export const getAllHouses = async (req: Request, res: Response) => {
   try {
@@ -17,8 +21,14 @@ export const getAllHouses = async (req: Request, res: Response) => {
           as: "photos",
           attributes: ["photo_url"],
         },
+        {
+          model: HouseAgent,
+          as: "agent",
+          attributes: ["agency"],
+        },
       ],
     });
+    const totalHouses = await House.count();
 
     if (houses) {
       const housesWithPhotos = houses.rows.map((house) => {
@@ -36,9 +46,9 @@ export const getAllHouses = async (req: Request, res: Response) => {
       res.status(200).json({
         message: "Houses fetched.",
         data: housesWithPhotos,
-        total: houses.count,
+        total: totalHouses,
         page,
-        totalPages: Math.ceil(houses.count / limit),
+        totalPages: Math.ceil(totalHouses / limit),
       });
     } else {
       res.status(404).json({ message: "No houses found." });

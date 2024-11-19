@@ -1,5 +1,7 @@
 import Image from "next/image";
 import House from "../interfaces/House";
+import HousePhoto from "../interfaces/HousePhoto";
+import { useState } from "react";
 
 const Preview = ({ house }: { house: House }) => {
   const formatCurrency = (value: number) => {
@@ -11,15 +13,11 @@ const Preview = ({ house }: { house: House }) => {
   };
 
   const price = formatCurrency(house.price);
+
   return (
-    <div className="relative w-[300px] h-[290px] flex flex-col shadow-xl rounded-xl">
-      <div className="w-full h-[180px] relative rounded-t-xl overflow-hidden">
-        <Image
-          src={house.photos[0]?.photo_url} // Path to your image
-          alt={house.address}
-          layout="fill"
-          objectFit="cover"
-        />
+    <div className="select-none relative w-[300px] h-[290px] flex flex-col shadow-xl rounded-xl">
+      <div className="select-none w-full h-[180px] relative rounded-t-xl overflow-hidden">
+        <HousePreviewCarousel photos={house.photos} />
       </div>
       <div>
         <h4>{price}</h4>
@@ -39,7 +37,7 @@ const Preview = ({ house }: { house: House }) => {
         </div>
       </div>
       <span className="text-[14px]">{house.address}</span>
-      <span className="text-[10px]">{null}</span>
+      <span className="text-[10px]">{house.agent?.agency || "null"}</span>
       <span className="text-white absolute top-2 left-2 p-1 bg-black/50 rounded-xl text-[12px] font-bold">
         {house.property_type || null}
       </span>
@@ -68,4 +66,82 @@ const Preview = ({ house }: { house: House }) => {
   );
 };
 
+export const EmptyPreview = () => {
+  return (
+    <div className="relative w-[300px] h-[290px] flex flex-col shadow-xl rounded-xl">
+      <div className="w-full h-[180px] relative rounded-t-xl overflow-hidden">
+        <div className="skeleton-loader">
+          <div className="image-placeholder" />
+          <div className="text-placeholder" />
+          <div className="text-placeholder short" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const HousePreviewCarousel = ({ photos }: { photos?: HousePhoto[] }) => {
+  const [index, setIndex] = useState(0);
+
+  const next = () => {
+    if (photos && index < photos.length - 1) {
+      setIndex((prev) => prev + 1);
+    }
+  };
+
+  const back = () => {
+    if (photos && index !== 0) {
+      setIndex((prev) => prev - 1);
+    }
+  };
+
+  if (!photos || photos.length === 0) {
+    return (
+      <div className="flex items-center justify-center w-full h-full bg-gray-200">
+        No photos available
+      </div>
+    );
+  }
+  return (
+    <div className="relative w-full h-full overflow-hidden">
+      <div
+        style={{
+          transform: `translateX(-${index * 100}%)`,
+        }}
+        className="relative w-full h-full transition-transform duration-1000 ease-in-out"
+      >
+        {photos.map((photo, photoIndex) => (
+          <div
+            key={photoIndex}
+            className="absolute top-0 left-0 w-full h-full"
+            style={{
+              transform: `translateX(${photoIndex * 100}%)`,
+            }}
+          >
+            <Image
+              className="object-cover"
+              src={photo.photo_url}
+              alt={`Slide ${photoIndex + 1}`}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          </div>
+        ))}
+      </div>
+      <button
+        onClick={back}
+        className="opacity-0 hover:opacity-100 transition-opacity font-bold text-white w-10 h-10 bg-black bg-opacity-50 absolute top-[50%] left-2 transform -translate-y-1/2 rounded-full"
+      >
+        &lt;
+      </button>
+      <button
+        onClick={next}
+        className=" opacity-0 hover:opacity-100 transition-opacity font-bold text-white w-10 h-10 bg-black bg-opacity-50 w-10 h-10 bg-black/50 absolute top-[50%] right-2 transform -translate-y-1/2 rounded-full"
+      >
+        &gt;
+      </button>
+    </div>
+  );
+};
 export default Preview;

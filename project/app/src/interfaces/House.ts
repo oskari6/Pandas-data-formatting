@@ -2,7 +2,7 @@ import HouseAmenity from "./HouseAmenity";
 import HouseFeature from "./HouseFeature";
 import HouseLocation from "./HouseLocation";
 import HousePhoto from "./HousePhoto";
-import HouseAgent from "./HousePhoto";
+import HouseAgent from "./HouseAgent";
 
 export default interface House {
   status: string;
@@ -21,4 +21,5 @@ export default interface House {
   agent?: HouseAgent;
   features?: HouseFeature[];
   amenities?: HouseAmenity[];
+  property_type?: string;
 }
