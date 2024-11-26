@@ -6,7 +6,7 @@ import HousePhoto from "../src/interfaces/HousePhoto";
 import Preview, { EmptyPreview } from "../src/components/Preview";
 import { MapComponent } from "../src/api/MapComponent";
 import { MapProvider } from "../src/api/MapProvider";
-import { OptionButtons } from "../page";
+import OptionButtons from "../src/utils/OptionButtons";
 
 const Houses = React.memo(() => {
   const [houses, setHouses] = useState<House[]>([]);
@@ -89,42 +89,59 @@ const Houses = React.memo(() => {
 
 const BuyPage = () => {
   const [mapWidth, setMapWidth] = useState(1170);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(0);
   const [isFullscreenMap, setIsFullscreenMap] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const minWidth = 620;
   const maxWidth = windowWidth - 350;
 
   useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    if (typeof window !== "undefined") {
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      setWindowWidth(window.innerWidth);
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   const handleDrag = throttle((e: MouseEvent) => {
-    window.requestAnimationFrame(() => {
-      const newWidth = e.clientX;
-      if (newWidth > minWidth && newWidth < maxWidth) {
-        setMapWidth(newWidth);
-      }
-    });
+    if (typeof window !== undefined) {
+      window.requestAnimationFrame(() => {
+        const newWidth = e.clientX;
+        if (newWidth > minWidth && newWidth < maxWidth) {
+          setMapWidth(newWidth);
+        }
+      });
+    }
   }, 20);
 
   const startDrag = () => {
-    document.addEventListener("mousemove", handleDrag);
-    document.addEventListener("mouseup", stopDrag);
+    if (typeof document !== undefined) {
+      document.addEventListener("mousemove", handleDrag);
+      document.addEventListener("mouseup", stopDrag);
+    }
   };
 
   const stopDrag = () => {
-    document.removeEventListener("mousemove", handleDrag);
-    document.removeEventListener("mouseup", stopDrag);
+    if (typeof document !== undefined) {
+      document.removeEventListener("mousemove", handleDrag);
+      document.removeEventListener("mouseup", stopDrag);
+    }
   };
 
   const toggleFullScreenMap = () => {
     setIsFullscreenMap((prev) => !prev);
   };
 
-  const isSmallScreen = windowWidth < 1000;
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const updateScreenSize = () => setIsSmallScreen(window.innerWidth < 1000);
+      updateScreenSize();
+      window.addEventListener("resize", updateScreenSize);
+      return () => window.removeEventListener("resize", updateScreenSize);
+    }
+  }, []);
 
   return (
     <div className="h-[80%]">
