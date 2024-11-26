@@ -9,3 +9,5 @@ Lead Management: Capture inquiries from potential buyers, allowing agents to man
 Booking Viewings: Allow users to schedule viewings or contact agents directly.
 Map Integration: Integrate maps to display property locations and nearby amenities.
 Analytics Dashboard: Track listing views, inquiries, and other engagement metrics.
+
+# Real estate website inspired by Zillow.com
