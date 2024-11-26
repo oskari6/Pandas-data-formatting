@@ -6,6 +6,7 @@ import HousePhoto from "../src/interfaces/HousePhoto";
 import Preview, { EmptyPreview } from "../src/components/Preview";
 import { MapComponent } from "../src/api/MapComponent";
 import { MapProvider } from "../src/api/MapProvider";
+import { OptionButtons } from "../page";
 
 const Houses = React.memo(() => {
   const [houses, setHouses] = useState<House[]>([]);
@@ -87,9 +88,18 @@ const Houses = React.memo(() => {
 });
 
 const BuyPage = () => {
-  const [mapWidth, setMapWidth] = useState(400);
-  const minWidth = 200;
-  const maxWidth = window.innerWidth - 300;
+  const [mapWidth, setMapWidth] = useState(1170);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [isFullscreenMap, setIsFullscreenMap] = useState(false);
+
+  const minWidth = 620;
+  const maxWidth = windowWidth - 350;
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleDrag = throttle((e: MouseEvent) => {
     window.requestAnimationFrame(() => {
@@ -110,6 +120,12 @@ const BuyPage = () => {
     document.removeEventListener("mouseup", stopDrag);
   };
 
+  const toggleFullScreenMap = () => {
+    setIsFullscreenMap((prev) => !prev);
+  };
+
+  const isSmallScreen = windowWidth < 1000;
+
   return (
     <div className="h-[80%]">
       <div className="gap-4 flex justify-center sticky top-0 w-full bg-white z-50 py-2">
@@ -124,28 +140,53 @@ const BuyPage = () => {
           Save search
         </button>
       </div>
-      <div className="flex h-full">
-        <div style={{ width: `${mapWidth}px` }} className="relative h-full">
-          <MapProvider>
-            <MapComponent />
-          </MapProvider>
-        </div>
-
-        <div
-          className="w-2 bg-gray-400 cursor-col-resize"
-          onMouseDown={startDrag}
-        ></div>
-
-        <div
-          style={{ width: `calc(100% - ${mapWidth}px)` }}
-          className="h-full overflow-y-auto"
-        >
-          <div className="ml-5 mt-5">
-            <h4 className="select-none">Real Estate & Homes For Sale</h4>
+      {isSmallScreen ? (
+        <div className="flex h-full">
+          {isFullscreenMap ? (
+            <div className="w-full h-full">
+              <MapProvider>
+                <MapComponent />
+              </MapProvider>
+            </div>
+          ) : (
+            <div className="h-full overflow-y-auto">
+              <div className="ml-5 mt-5">
+                <h4 className="select-none">Real Estate & Homes For Sale</h4>
+              </div>
+              <Houses />
+            </div>
+          )}
+          <div className="fixed bottom-4 right-4 z-50 flex gap-2">
+            {!isFullscreenMap && (
+              <OptionButtons toggle={toggleFullScreenMap} text="Map" />
+            )}
+            {isFullscreenMap && (
+              <OptionButtons toggle={toggleFullScreenMap} text="List" />
+            )}
           </div>
-          <Houses />
         </div>
-      </div>
+      ) : (
+        <div className="flex h-full">
+          <div style={{ width: `${mapWidth}px` }} className="relative h-full">
+            <MapProvider>
+              <MapComponent />
+            </MapProvider>
+          </div>
+          <div
+            className="w-2 bg-gray-400 cursor-col-resize"
+            onMouseDown={startDrag}
+          ></div>
+          <div
+            style={{ width: `calc(100% - ${mapWidth}px)` }}
+            className="h-full overflow-y-auto"
+          >
+            <div className="ml-5 mt-5">
+              <h4 className="select-none">Real Estate & Homes For Sale</h4>
+            </div>
+            <Houses />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import Image from "next/image";
 export const Header = () => {
   return (
     <nav className="text-xl pb-3 ">
-      <ul className="flex h-[10%] justify-center items-center border-b-2 border-grey-500">
+      <ul className="flex h-[80px] justify-center items-center border-b-2 border-grey-500">
         <li className="p-5">
           <Link className="w-full" href="/">
             Rent
